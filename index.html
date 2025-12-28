@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Quiz Generator</title>
+
+<style>
+  * { box-sizing: border-box; font-family: Inter, Arial; }
+  body { background:#f5f6fb; padding:20px; }
+  .container {
+    max-width: 900px; margin:auto;
+    background:#fff; border-radius:18px;
+    padding:24px 28px; box-shadow:0 10px 30px rgba(0,0,0,.06);
+  }
+  h2 { margin:0 0 18px; font-size:18px; }
+  label { font-size:13px; color:#6b7280; display:block; margin-bottom:6px; }
+  input, select, textarea {
+    width:100%; padding:10px 12px; border-radius:10px;
+    border:1px solid #e5e7eb; background:#fafafa;
+  }
+  textarea { resize:none; }
+  .grid { display:grid; gap:16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    border:1px solid #e5e7eb; border-radius:14px;
+    padding:14px 16px; background:#f9fafb;
+  }
+  .toggle {
+    display:flex; gap:6px; align-items:center;
+    cursor:pointer; user-select:none;
+  }
+  .toggle input { width:auto; }
+  .format-options { display:flex; gap:10px; margin-top:8px; }
+  .chip {
+    flex:1; text-align:center; padding:10px 0;
+    border-radius:12px; border:1px solid #e5e7eb;
+    cursor:pointer; background:#fff;
+  }
+  .chip.active { background:#111827; color:#fff; }
+  .row { display:flex; align-items:center; gap:10px; }
+  .difficulty { display:grid; gap:10px; }
+  .difficulty-item {
+    border:1px solid #e5e7eb; border-radius:14px;
+    padding:10px 12px; display:flex;
+    align-items:center; justify-content:space-between;
+    background:#fff;
+  }
+  .difficulty-item input { width:70px; }
+  .cognitive { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .cognitive button {
+    padding:10px; border-radius:12px; border:1px solid #e5e7eb;
+    background:#fff; cursor:pointer;
+  }
+  .cognitive button.active { background:#eef2ff; border-color:#6366f1; color:#4338ca; }
+  .ai-box {
+    border:1px solid #e5e7eb; border-radius:14px;
+    padding:14px; background:#f0f7ff;
+  }
+  .submit {
+    margin-top:18px; width:100%;
+    background:#0d1224; color:#fff; padding:14px;
+    border-radius:14px; border:none; font-size:15px;
+    cursor:pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Parameter Soal</h2>
+
+  <div class="grid grid-2">
+    <div>
+      <label>Mata Pelajaran</label>
+      <input placeholder="Misal: IPA" />
+    </div>
+
+    <div>
+      <label>Topik / Tujuan</label>
+      <textarea rows="2" placeholder="Perubahan wujud zat"></textarea>
+    </div>
+
+    <div>
+      <label>Fase</label>
+      <select>
+        <option>Fase A</option><option selected>Fase B</option><option>Fase C</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Kelas</label>
+      <select>
+        <option>Kelas 1</option><option>Kelas 2</option>
+        <option selected>Kelas 3</option><option>Kelas 4</option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <label>Format Soal</label>
+      <select>
+        <option>Pilihan Ganda</option>
+        <option>Isian Singkat</option>
+        <option>Essay</option>
+      </select>
+
+      <div class="format-options">
+        <div class="chip active">3</div>
+        <div class="chip">4</div>
+        <div class="chip">5</div>
+      </div>
+    </div>
+
+    <div class="ai-box">
+      <div class="toggle">
+        <input type="checkbox" checked />
+        <span><strong>Mode Bergambar</strong><br>
+        <small>Generate ilustrasi otomatis</small></span>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="grid grid-2">
+    <div class="difficulty">
+      <div class="difficulty-item">
+        <label class="toggle">
+          <input type="checkbox" checked> Mudah
+        </label>
+        <input type="number" min="0" value="10">
+      </div>
+
+      <div class="difficulty-item">
+        <label class="toggle">
+          <input type="checkbox" checked> Sedang
+        </label>
+        <input type="number" min="0" value="5">
+      </div>
+
+      <div class="difficulty-item">
+        <label class="toggle">
+          <input type="checkbox"> Sulit
+        </label>
+        <input type="number" min="0" value="0">
+      </div>
+    </div>
+
+    <div>
+      <label>Level Kognitif</label>
+      <div class="cognitive">
+        <button>C1<br><small>Mengingat</small></button>
+        <button>C2<br><small>Memahami</small></button>
+        <button>C3<br><small>Menerapkan</small></button>
+        <button>C4<br><small>Menganalisis</small></button>
+        <button>C5<br><small>Mengevaluasi</small></button>
+        <button>C6<br><small>Mencipta</small></button>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit">Generate Soal Sekarang</button>
+</div>
+
+<script>
+  // efek toggle pilihan (contoh kecil)
+  document.querySelectorAll(".chip").forEach(chip=>{
+    chip.onclick=()=> {
+      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+    };
+  });
+  document.querySelectorAll(".cognitive button").forEach(btn=>{
+    btn.onclick=()=> btn.classList.toggle("active");
+  });
+</script>
+
+</body>
+</html>
