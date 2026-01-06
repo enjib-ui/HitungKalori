@@ -3,203 +3,113 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Quiz Generator</title>
+<title>Kalkulator Kalori, Lemak & Olahraga</title>
 
 <style>
-  * { box-sizing:border-box; font-family: Inter, Arial; }
-  body { background:#f5f6fb; padding:14px; }
-
-  .container{
-    max-width:900px; margin:auto;
-    background:#fff; border-radius:18px;
-    padding:18px 18px 20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.06);
-  }
-
-  h2{ margin:0 0 14px; font-size:17px; }
-
-  label{ font-size:13px; color:#6b7280; display:block; margin-bottom:6px; }
-
-  input,select,textarea{
-    width:100%; padding:11px 12px;
-    border-radius:12px; border:1px solid #e5e7eb;
-    background:#fafafa;
-  }
-
-  textarea{ resize:none; }
-
-  .grid{ display:grid; gap:14px; }
-  .grid-2{ grid-template-columns:repeat(2,1fr); }
-
-  .card{
-    border:1px solid #e5e7eb;
-    border-radius:14px; background:#f9fafb;
-    padding:14px;
-  }
-
-  .format-options{ display:flex; gap:10px; margin-top:10px; }
-  .chip{
-    flex:1; text-align:center; padding:10px 0;
-    border-radius:12px; border:1px solid #e5e7eb;
-    cursor:pointer; background:#fff; font-size:14px;
-  }
-  .chip.active{ background:#111827; color:#fff; }
-
-  .difficulty-item{
-    border:1px solid #e5e7eb; border-radius:14px;
-    padding:10px 12px; display:flex;
-    align-items:center; justify-content:space-between;
-    gap:10px; background:#fff;
-  }
-  .difficulty-item input{ width:72px; }
-
-  .ai-box{
-    border:1px solid #e5e7eb; border-radius:14px;
-    padding:14px; background:#eef6ff;
-  }
-
-  .cognitive{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
-  }
-  .cognitive button{
-    padding:10px 6px; border-radius:12px;
-    border:1px solid #e5e7eb; background:#fff;
-    cursor:pointer; font-size:12px; text-align:center;
-  }
-  .cognitive button.active{
-    background:#eef2ff; border-color:#6366f1; color:#4338ca;
-  }
-
-  .submit{
-    margin-top:18px; width:100%;
-    background:#0d1224; color:#fff;
-    padding:14px 10px; border-radius:14px;
-    border:none; font-size:15px; cursor:pointer;
-  }
-
-  /* 📱 RESPONSIVE — khusus smartphone */
-  @media (max-width: 768px){
-    .container{ padding:16px 14px 18px; }
-    .grid-2{ grid-template-columns:1fr; }
-    .format-options{ gap:6px; }
-    .chip{ padding:9px 0; }
-    .cognitive{ grid-template-columns:repeat(2,1fr); }
-    .difficulty-item input{ width:64px; }
-  }
+  body { font-family: Arial; background:#eef3ff; padding:20px }
+  .card { background:white; padding:18px; border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-width:520px; margin:auto }
+  h2 { margin-top:0 }
+  label { font-weight:bold }
+  select, input { width:100%; padding:10px; margin:8px 0 14px; border-radius:8px; border:1px solid #ccc }
+  button { width:100%; padding:12px; border:none; border-radius:10px; background:#22c55e; color:white; font-weight:bold; }
+  .result { margin-top:16px; background:#f0fdf4; padding:14px; border-radius:10px }
+  small { color:#555 }
 </style>
 </head>
 
 <body>
+<div class="card">
+  <h2>Kalkulator Kalori, Lemak & Rekomendasi Olahraga</h2>
 
-<div class="container">
-  <h2>Parameter Soal</h2>
+  <label>Makanan yang dimakan</label>
+  <select id="food">
+    <option value="">-- pilih makanan --</option>
 
-  <div class="grid grid-2">
-    <div>
-      <label>Mata Pelajaran</label>
-      <input placeholder="Misal: IPA" />
-    </div>
+    <!-- menu utama + jajanan -->
+    <option value="250">Nasi putih (1 porsi ~ 250 kcal)</option>
+    <option value="350">Mi goreng (1 porsi ~ 350 kcal)</option>
+    <option value="200">Ayam goreng (1 potong ~ 200 kcal)</option>
+    <option value="150">Roti tawar (2 lembar ~ 150 kcal)</option>
+    <option value="120">Susu kotak (1 cup ~ 120 kcal)</option>
+    <option value="180">Burger kecil (1 buah ~ 180 kcal)</option>
+    <option value="220">Minuman manis (1 gelas ~ 220 kcal)</option>
 
-    <div>
-      <label>Topik / Tujuan</label>
-      <textarea rows="2" placeholder="Perubahan wujud zat"></textarea>
-    </div>
+    <option value="170">Gorengan (1 buah ~ 170 kcal)</option>
+    <option value="350">Seblak (1 mangkuk ~ 350 kcal)</option>
+    <option value="160">Cilok saus kacang (1 porsi ~ 160 kcal)</option>
+    <option value="320">Bakso (1 mangkuk ~ 320 kcal)</option>
+    <option value="500">Nasi goreng (1 porsi ~ 500 kcal)</option>
+    <option value="420">Mie ayam (1 porsi ~ 420 kcal)</option>
+    <option value="140">Tahu goreng (1 potong ~ 140 kcal)</option>
+    <option value="150">Tempe goreng (1 potong ~ 150 kcal)</option>
+    <option value="260">Donat (1 buah ~ 260 kcal)</option>
+    <option value="210">Kentang goreng (1 porsi kecil ~ 210 kcal)</option>
+    <option value="300">Sosis bakar (1 buah ~ 300 kcal)</option>
+  </select>
 
-    <div>
-      <label>Fase</label>
-      <select>
-        <option>Fase A</option>
-        <option selected>Fase B</option>
-        <option>Fase C</option>
-      </select>
-    </div>
+  <label>Berapa porsinya?</label>
+  <input type="number" id="portion" min="1" value="1">
 
-    <div>
-      <label>Kelas</label>
-      <select>
-        <option>Kelas 1</option>
-        <option>Kelas 2</option>
-        <option selected>Kelas 3</option>
-        <option>Kelas 4</option>
-      </select>
-    </div>
-  </div>
+  <label>Berapa kali dikonsumsi?</label>
+  <input type="number" id="times" min="1" value="1">
 
-  <br>
+  <label>Rentang waktu</label>
+  <select id="period">
+    <option value="1">Per hari</option>
+    <option value="7">Per minggu</option>
+    <option value="30">Per bulan</option>
+  </select>
 
-  <div class="grid grid-2">
-    <div class="card">
-      <label>Format Soal</label>
-      <select>
-        <option>Pilihan Ganda</option>
-        <option>Isian Singkat</option>
-        <option>Essay</option>
-      </select>
+  <button onclick="hitung()">Hitung Estimasi</button>
 
-      <div class="format-options">
-        <div class="chip active">3</div>
-        <div class="chip">4</div>
-        <div class="chip">5</div>
-      </div>
-    </div>
+  <div id="output" class="result" style="display:none"></div>
 
-    <div class="ai-box">
-      <label class="toggle">
-        <input type="checkbox" checked style="width:auto;">
-        <strong>Mode Bergambar</strong><br>
-        <small>Generate ilustrasi otomatis</small>
-      </label>
-    </div>
-  </div>
-
-  <br>
-
-  <div class="grid grid-2">
-    <div>
-      <div class="difficulty-item">
-        <label><input type="checkbox" checked style="width:auto;"> Mudah</label>
-        <input type="number" min="0" value="10">
-      </div>
-
-      <div class="difficulty-item">
-        <label><input type="checkbox" checked style="width:auto;"> Sedang</label>
-        <input type="number" min="0" value="5">
-      </div>
-
-      <div class="difficulty-item">
-        <label><input type="checkbox" style="width:auto;"> Sulit</label>
-        <input type="number" min="0" value="0">
-      </div>
-    </div>
-
-    <div>
-      <label>Level Kognitif</label>
-      <div class="cognitive">
-        <button>C1<br><small>Mengingat</small></button>
-        <button>C2<br><small>Memahami</small></button>
-        <button>C3<br><small>Menerapkan</small></button>
-        <button>C4<br><small>Menganalisis</small></button>
-        <button>C5<br><small>Mengevaluasi</small></button>
-        <button>C6<br><small>Mencipta</small></button>
-      </div>
-    </div>
-  </div>
-
-  <button class="submit">Generate Soal Sekarang</button>
+  <small>
+    *Estimasi edukatif: 1 gram lemak ≈ 9 kcal — angka bisa berbeda tergantung usia, metabolisme, dan aktivitas.
+  </small>
 </div>
 
 <script>
-  document.querySelectorAll(".chip").forEach(chip=>{
-    chip.onclick=()=> {
-      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-      chip.classList.add("active");
-    };
+function hitung() {
+  const foodCal = Number(document.getElementById("food").value || 0);
+  const portion = Number(document.getElementById("portion").value || 1);
+  const times = Number(document.getElementById("times").value || 1);
+  const period = Number(document.getElementById("period").value);
+
+  if (!foodCal) { alert("Silakan pilih makanan."); return; }
+
+  const totalCalories = foodCal * portion * times * period;
+  const fatGrams = (totalCalories / 9).toFixed(1);
+
+  // olahraga (kcal per 30 menit)
+  const sports = [
+    { name: "Jogging", burn: 250 },
+    { name: "Bersepeda santai", burn: 200 },
+    { name: "Senam aerobik", burn: 220 },
+    { name: "Skipping (lompat tali)", burn: 280 },
+    { name: "Renang", burn: 300 }
+  ];
+
+  // jalan kaki (≈ 60 kcal / km)
+  const walkingKm = (totalCalories / 60).toFixed(1);
+
+  let html = `
+    <b>Total kalori periode tersebut:</b> ${totalCalories} kcal<br>
+    <b>Estimasi lemak yang terbentuk:</b> ± <b>${fatGrams} gram</b><br><br>
+    <b>Olahraga yang disarankan:</b><br>
+  `;
+
+  sports.forEach(s => {
+    const minutes = Math.ceil((totalCalories / s.burn) * 30);
+    html += `• ${s.name}: sekitar <b>${minutes} menit</b><br>`;
   });
 
-  document.querySelectorAll(".cognitive button").forEach(btn=>{
-    btn.onclick=()=> btn.classList.toggle("active");
-  });
+  html += `<br>• Jalan kaki: sekitar <b>${walkingKm} km</b>`;
+
+  const out = document.getElementById("output");
+  out.innerHTML = html;
+  out.style.display = "block";
+}
 </script>
-
 </body>
 </html>
