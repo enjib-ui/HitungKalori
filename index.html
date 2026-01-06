@@ -142,14 +142,15 @@ function hitung() {
   }
 
   const times = Number(document.getElementById("times").value || 1);
-  const period = Number(document.getElementById("period").value);
-  const weight = Number(document.getElementById("weight").value || 60);
+const period = document.getElementById("period").value;
+const weight = Number(document.getElementById("weight").value || 60);
 
-  const kaloriMakan = daftar.reduce((sum, i) => sum + (i.cal * i.portion), 0);
-  const totalCalories = kaloriMakan * times * period;
+const kaloriMakan = daftar.reduce((sum, i) => sum + (i.cal * i.portion), 0);
 
-  const fatGrams = (totalCalories / 9).toFixed(1);
+// times = berapa kali dalam periode
+const totalCalories = kaloriMakan * times;
 
+  const fatGrams = (totalCalories / 7.7).toFixed(1);
   // MET (standar umum)
   const sports = [
     { name: "Jogging (sedang)", met: 7.0 },
