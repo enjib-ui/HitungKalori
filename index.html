@@ -1,179 +1,102 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kalkulator Kalori, Lemak & Olahraga</title>
-
-<style>
-  body { font-family: Arial; background:#eef3ff; padding:20px }
-  .card { background:white; padding:18px; border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.08); max-width:600px; margin:auto }
-  h2 { margin-top:0 }
-  label { font-weight:bold }
-  select, input { width:100%; padding:10px; margin:8px 0 14px; border-radius:8px; border:1px solid #ccc }
-  button { padding:10px 14px; border:none; border-radius:10px; color:white; font-weight:bold; cursor:pointer }
-  .btn-main { background:#22c55e; width:100%; margin-top:6px }
-  .btn-add { background:#3b82f6 }
-  .result { margin-top:16px; background:#f0fdf4; padding:14px; border-radius:10px }
-  table { width:100%; border-collapse:collapse; margin-top:6px }
-  th,td { padding:8px; border-bottom:1px solid #ddd; font-size:14px }
-  th { background:#f8fafc; text-align:left }
-  small { color:#555 }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalkulator Makanan & Olahraga</title>
+  <style>
+    body{font-family:Arial;padding:16px}
+    .card{border:1px solid #ddd;border-radius:10px;padding:14px;margin-bottom:14px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #eee;padding:8px}
+    th{background:#f7f7f7}
+  </style>
 </head>
-
 <body>
+
+<h2>Catatan Makanan</h2>
+
 <div class="card">
-  <h2>Kalkulator Kalori, Lemak & Rekomendasi Olahraga</h2>
-
-  <label>Pilih makanan</label>
-  <select id="food">
-    <option value="">-- pilih makanan --</option>
-
-    <!-- menu + jajanan -->
-    <option value="250">Nasi putih (1 porsi ~ 250 kcal)</option>
-    <option value="350">Mi goreng (1 porsi ~ 350 kcal)</option>
-    <option value="200">Ayam goreng (1 potong ~ 200 kcal)</option>
-    <option value="150">Roti tawar (2 lembar ~ 150 kcal)</option>
-    <option value="120">Susu kotak (1 cup ~ 120 kcal)</option>
-    <option value="180">Burger kecil (1 buah ~ 180 kcal)</option>
-    <option value="220">Minuman manis (1 gelas ~ 220 kcal)</option>
-
-    <option value="170">Gorengan (1 buah ~ 170 kcal)</option>
-    <option value="350">Seblak (1 mangkuk ~ 350 kcal)</option>
-    <option value="160">Cilok saus kacang (1 porsi ~ 160 kcal)</option>
-    <option value="320">Bakso (1 mangkuk ~ 320 kcal)</option>
-    <option value="500">Nasi goreng (1 porsi ~ 500 kcal)</option>
-    <option value="420">Mie ayam (1 porsi ~ 420 kcal)</option>
-    <option value="140">Tahu goreng (1 potong ~ 140 kcal)</option>
-    <option value="150">Tempe goreng (1 potong ~ 150 kcal)</option>
-    <option value="260">Donat (1 buah ~ 260 kcal)</option>
-    <option value="210">Kentang goreng (1 porsi kecil ~ 210 kcal)</option>
-    <option value="300">Sosis bakar (1 buah ~ 300 kcal)</option>
-  </select>
-
-  <label>Berapa porsinya?</label>
-  <input type="number" id="portion" min="1" value="1">
-
-  <button class="btn-add" onclick="tambahMakanan()">+ Tambahkan ke daftar</button>
-
-  <table id="listTable" style="display:none">
+  <table>
     <thead>
       <tr>
+        <th>Pilih</th>
         <th>Makanan</th>
         <th>Porsi</th>
-        <th>Kalori total</th>
-        <th></th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      <tr>
+        <td><input type="checkbox" class="food" data-name="Gorengan" data-cal="120"></td>
+        <td>Gorengan</td>
+        <td><input type="number" class="qty" value="1" min="1" /></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="food" data-name="Seblak" data-cal="350"></td>
+        <td>Seblak</td>
+        <td><input type="number" class="qty" value="1" min="1" /></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="food" data-name="Cilok" data-cal="180"></td>
+        <td>Cilok</td>
+        <td><input type="number" class="qty" value="1" min="1" /></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="food" data-name="Mie Ayam" data-cal="450"></td>
+        <td>Mie Ayam</td>
+        <td><input type="number" class="qty" value="1" min="1" /></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="food" data-name="Minuman Manis" data-cal="150"></td>
+        <td>Minuman Manis</td>
+        <td><input type="number" class="qty" value="1" min="1" /></td>
+      </tr>
+    </tbody>
   </table>
-
-  <label>Berapa kali dikonsumsi?</label>
-  <input type="number" id="times" min="1" value="1">
-
-  <label>Rentang waktu</label>
-  <select id="period">
-    <option value="1">Per hari</option>
-    <option value="7">Per minggu</option>
-    <option value="30">Per bulan</option>
-  </select>
-
-  <button class="btn-main" onclick="hitung()">Hitung Estimasi</button>
-
-  <div id="output" class="result" style="display:none"></div>
-
-  <small>
-    *Estimasi edukatif: 1 gram lemak ≈ 9 kcal — hasil bisa berbeda tergantung usia, metabolisme, dan aktivitas.
-  </small>
 </div>
 
+<h2>Pilihan Olahraga</h2>
+<p>Masukkan target kalori yang ingin dibakar:</p>
+<input type="number" id="target" placeholder="contoh: 300" /> kcal
+<br><br>
+<button onclick="hitung()">Hitung Rekomendasi</button>
+
+<div id="hasil" class="card" style="display:none"></div>
+
 <script>
-let daftar = [];
-
-function tambahMakanan() {
-  const select = document.getElementById("food");
-  const cal = Number(select.value || 0);
-  const name = select.options[select.selectedIndex].text;
-  const portion = Number(document.getElementById("portion").value || 1);
-
-  if (!cal) { alert("Silakan pilih makanan."); return; }
-
-  daftar.push({ name, cal, portion });
-  renderList();
-}
-
-function hapus(index) {
-  daftar.splice(index, 1);
-  renderList();
-}
-
-function renderList() {
-  const table = document.getElementById("listTable");
-  const body = table.querySelector("tbody");
-  body.innerHTML = "";
-
-  if (daftar.length === 0) {
-    table.style.display = "none";
-    return;
-  }
-
-  daftar.forEach((item, i) => {
-    const total = item.cal * item.portion;
-    body.innerHTML += `
-      <tr>
-        <td>${item.name}</td>
-        <td>${item.portion}</td>
-        <td>${total} kcal</td>
-        <td><button onclick="hapus(${i})">Hapus</button></td>
-      </tr>
-    `;
-  });
-
-  table.style.display = "table";
-}
-
 function hitung() {
-  if (daftar.length === 0) {
-    alert("Tambahkan makanan terlebih dahulu.");
-    return;
-  }
+  const rows = document.querySelectorAll("tbody tr");
+  let total = 0;
 
-  const times = Number(document.getElementById("times").value || 1);
-  const period = Number(document.getElementById("period").value);
-
-  const kaloriMakan = daftar.reduce((sum, i) => sum + (i.cal * i.portion), 0);
-  const totalCalories = kaloriMakan * times * period;
-
-  const fatGrams = (totalCalories / 9).toFixed(1);
-
-  const sports = [
-    { name: "Jogging", burn: 250 },
-    { name: "Bersepeda santai", burn: 200 },
-    { name: "Senam aerobik", burn: 220 },
-    { name: "Skipping (lompat tali)", burn: 280 },
-    { name: "Renang", burn: 300 }
-  ];
-
-  const walkingKm = (totalCalories / 60).toFixed(1);
-
-  let html = `
-    <b>Total kalori periode tersebut:</b> ${totalCalories} kcal<br>
-    <b>Estimasi lemak yang terbentuk:</b> ± <b>${fatGrams} gram</b><br><br>
-    <b>Olahraga yang disarankan:</b><br>
-  `;
-
-  sports.forEach(s => {
-    const minutes = Math.ceil((totalCalories / s.burn) * 30);
-    html += `• ${s.name}: sekitar <b>${minutes} menit</b><br>`;
+  rows.forEach(row => {
+    const check = row.querySelector(".food");
+    const qty = row.querySelector(".qty");
+    if (check.checked) {
+      const cal = Number(check.dataset.cal) * Number(qty.value || 1);
+      total += cal;
+    }
   });
 
-  html += `<br>• Jalan kaki: sekitar <b>${walkingKm} km</b>`;
+  const target = Number(document.getElementById("target").value || 0);
+  const hasil = document.getElementById("hasil");
 
-  const out = document.getElementById("output");
-  out.innerHTML = html;
-  out.style.display = "block";
+  // Contoh konversi sederhana
+  const jogging = Math.max(10, Math.round((total + target) / 10));   // menit
+  const jalan = Math.max(1, ((total + target) / 60).toFixed(1));     // km
+  const bersepeda = Math.max(10, Math.round((total + target) / 12)); // menit
+
+  hasil.style.display = "block";
+  hasil.innerHTML = `
+    <b>Total estimasi kalori dari makanan:</b> ${total} kcal<br><br>
+    <b>Rekomendasi olahraga yang bisa dipilih:</b>
+    <ul>
+      <li>Jogging ± <b>${jogging}</b> menit</li>
+      <li>Jalan kaki ± <b>${jalan}</b> km</li>
+      <li>Bersepeda santai ± <b>${bersepeda}</b> menit</li>
+    </ul>
+  `;
 }
 </script>
+
 </body>
 </html>
