@@ -26,6 +26,7 @@
 <div class="card">
   <h2>Kalkulator Kalori, Lemak & Rekomendasi Olahraga</h2>
 
+  <!-- PILIH MAKANAN -->
   <label>Pilih makanan</label>
 <select id="food">
   <option value="">-- pilih makanan --</option>
@@ -68,7 +69,7 @@
     <tbody></tbody>
   </table>
 
-  <label>Berapa kali dikonsumsi?</label>
+  <label>Berapa kali dikonsumsi dalam periode?</label>
   <input type="number" id="times" min="1" value="1">
 
   <label>Rentang waktu</label>
@@ -78,15 +79,37 @@
     <option value="30">Per bulan</option>
   </select>
 
+  <!-- DATA UNTUK TDEE -->
+  <label>Jenis kelamin</label>
+  <select id="gender">
+    <option value="male">Laki-laki</option>
+    <option value="female">Perempuan</option>
+  </select>
+
+  <label>Usia (tahun)</label>
+  <input type="number" id="age" min="10" value="25">
+
+  <label>Tinggi badan (cm)</label>
+  <input type="number" id="height" min="120" value="165">
+
   <label>Berat badan (kg)</label>
   <input type="number" id="weight" min="30" value="60">
+
+  <label>Tingkat aktivitas</label>
+  <select id="activity">
+    <option value="1.2">Sangat ringan (banyak duduk)</option>
+    <option value="1.375">Ringan (olahraga 1–3x/minggu)</option>
+    <option value="1.55">Sedang (3–5x/minggu)</option>
+    <option value="1.725">Berat (6–7x/minggu)</option>
+    <option value="1.9">Sangat berat</option>
+  </select>
 
   <button class="btn-main" onclick="hitung()">Hitung Estimasi</button>
 
   <div id="output" class="result" style="display:none"></div>
 
   <small>
-    *Estimasi edukatif: 1 gram lemak ≈ 9 kcal — hasil bisa berbeda tergantung usia, metabolisme, dan aktivitas.
+    *Estimasi edukatif. Hasil bisa berbeda tergantung usia, metabolisme, komposisi tubuh, dan aktivitas nyata.
   </small>
 </div>
 
@@ -142,16 +165,37 @@ function hitung() {
   }
 
   const times = Number(document.getElementById("times").value || 1);
-const period = document.getElementById("period").value;
-const weight = Number(document.getElementById("weight").value || 60);
+  const period = Number(document.getElementById("period").value);
 
-const kaloriMakan = daftar.reduce((sum, i) => sum + (i.cal * i.portion), 0);
+  const gender = document.getElementById("gender").value;
+  const age = Number(document.getElementById("age").value);
+  const height = Number(document.getElementById("height").value);
+  const weight = Number(document.getElementById("weight").value);
+  const activity = Number(document.getElementById("activity").value);
 
-// times = berapa kali dalam periode
-const totalCalories = kaloriMakan * times;
+  const kaloriMakan = daftar.reduce((sum, i) => sum + (i.cal * i.portion), 0);
+  const totalCalories = kaloriMakan * times;   // konsumsi per periode
 
-  const fatGrams = (totalCalories / 7.7).toFixed(1);
-  // MET (standar umum)
+  // --- BMR (Mifflin-St Jeor) ---
+  let BMR;
+  if (gender === "male") {
+    BMR = 10 * weight + 6.25 * height - 5 * age + 5;
+  } else {
+    BMR = 10 * weight + 6.25 * height - 5 * age - 161;
+  }
+
+  // TDEE per hari
+  const TDEE = BMR * activity;
+
+  // TDEE untuk periode yang sama
+  const tdeePeriod = TDEE * period;
+
+  // selisih kalori
+  const diff = totalCalories - tdeePeriod;
+
+  // estimasi lemak (1 kg lemak ≈ 7700 kcal → 1 g ≈ 7.7 kcal)
+  const fatGrams = (Math.max(diff, 0) / 7.7).toFixed(1);
+
   const sports = [
     { name: "Jogging (sedang)", met: 7.0 },
     { name: "Bersepeda santai", met: 4.0 },
@@ -161,22 +205,33 @@ const totalCalories = kaloriMakan * times;
   ];
 
   let html = `
-    <b>Total kalori periode tersebut:</b> ${totalCalories} kcal<br>
-    <b>Estimasi lemak yang terbentuk:</b> ± <b>${fatGrams} gram</b><br>
-    <b>Berat badan perhitungan:</b> ${weight} kg<br><br>
-    <b>Olahraga yang disarankan (berdasarkan MET):</b><br>
+    <b>Total kalori makanan (periode ini):</b> ${totalCalories.toFixed(0)} kcal<br>
+    <b>Kebutuhan tubuh (TDEE) periode ini:</b> ${tdeePeriod.toFixed(0)} kcal<br>
+    <b>Selisih:</b> ${diff.toFixed(0)} kcal (${diff > 0 ? "surplus" : diff < 0 ? "defisit" : "seimbang"})<br><br>
   `;
 
-  sports.forEach(s => {
-    const hours = totalCalories / (s.met * weight);
-    const minutes = Math.ceil(hours * 60);
-    html += `• ${s.name}: sekitar <b>${minutes} menit</b><br>`;
-  });
+  if (diff > 0) {
+    html += `
+      <b>Jika surplus ini tidak dikompensasi, estimasi lemak yang dapat terbentuk:</b>
+      ± <b>${fatGrams} gram</b><br><br>
+      <b>Olahraga yang disarankan (untuk menutup surplus ini):</b><br>
+    `;
 
-  // Jalan kaki — MET 3.3, kecepatan rata-rata 5 km/jam
-  const walkingHours = totalCalories / (3.3 * weight);
-  const walkingKm = (walkingHours * 5).toFixed(1);
-  html += `<br>• Jalan kaki: sekitar <b>${walkingKm} km</b>`;
+    sports.forEach(s => {
+      const hours = diff / (s.met * weight);
+      const minutes = Math.ceil(hours * 60);
+      html += `• ${s.name}: sekitar <b>${minutes} menit</b><br>`;
+    });
+
+    const walkingHours = diff / (3.3 * weight);
+    const walkingKm = (walkingHours * 5).toFixed(1);
+    html += `<br>• Jalan kaki: sekitar <b>${walkingKm} km</b>`;
+  } else {
+    html += `
+      <b>Anda sudah tidak surplus kalori pada periode ini.</b><br>
+      Defisit/Seimbang bukan berarti harus menambah olahraga — tetap jaga pola makan 😊
+    `;
+  }
 
   const out = document.getElementById("output");
   out.innerHTML = html;
